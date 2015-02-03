@@ -1,0 +1,1 @@
+Distributed Vertex coloring, where each vertex is a server.

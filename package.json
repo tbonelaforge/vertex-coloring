@@ -1,0 +1,17 @@
+{
+  "name": "vertex-coloring",
+  "version": "0.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hapi": "~8.1.0",
+    "request": "~2.53.0",
+    "async": "~0.9.0",
+    "underscore": "~1.7.0"
+  }
+}
