@@ -29,15 +29,20 @@ server.connection({ port: myId } );
 
 function isHighestUndecided() {
   var maxUndecided = 0;
-  
-  _.each(graphData.vertices[myId], function(n) {
+  var n = null;
+
+  if (myColor !== 'undecided') {
+    return false;
+  }
+  for (var i = 0; i < graphData.vertices[myId].length; i++) {
+    n = graphData.vertices[myId][i];
     if (!neighbors[n]) {
       return false;
     }
     if (neighbors[n] === 'undecided' && Number(n) > maxUndecided) {
       maxUndecided = Number(n);
     }
-  });
+  }
   if (Number(myId) > maxUndecided) {
     return true;
   }
@@ -50,8 +55,9 @@ function firstFree() {
   while (true) {
     if (_.values(neighbors).indexOf(color) > -1) {
       color += 1;
+    } else {
+      return color;
     }
-    return color;
   }
 }
 
@@ -76,19 +82,26 @@ function informNeighbors(callback) {
   );
 }
 
+function convertNumber(color) {
+  if (color === 'undecided') {
+    return color;
+  }
+  return Number(color);
+}
+
 server.route({
   method: 'POST',
   path: '/color',
   handler: function(request, reply) {
     var nodeId = request.payload.nodeId;
     var color = request.payload.color;
-
-    neighbors[nodeId] = color;
+    
+    neighbors[nodeId] = convertNumber(color);
     if (isHighestUndecided()) {
       myColor = firstFree();
+      console.log('Node ' + myId + ' just picked color: ' + myColor);
       informNeighbors();
     }
-
     reply('ok');
   }
 });
@@ -98,13 +111,14 @@ server.start(function(err) {
     console.log('Problem starting server:\n', err);
     throw err;
   }
+  console.log('Node listening on port ' + myId);
 });
 
 var pushInterval = setInterval(function() {
+  console.log("Trying to push notifications to neighbors...\n");
   informNeighbors(function(err) {
     if (!err) {
       clearInterval(pushInterval);
     }
   });
-  console.log('\n\n\n\n\n\n');
-}, 3000);
+}, 1000);
