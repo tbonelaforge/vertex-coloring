@@ -3,13 +3,7 @@ var _ = require('underscore');
 var async = require('async');
 var request = require('request');
 
-var graphData = {
-  vertices: {
-    '3001' : [ '3002', '3003' ],
-    '3002' : [ '3001', '3003' ],
-    '3003' : [ '3001', '3002' ]
-  }
-};
+var graphData = require('./graph.json');
 
 var myId = process.argv[2];
 
